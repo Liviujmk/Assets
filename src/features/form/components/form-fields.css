@@ -1,0 +1,49 @@
+.fields {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.fields>* {
+    margin: 10px 0;
+    width: 100%;
+}
+
+.p-hidden-accessible {
+    display: none;
+}
+
+.checkbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 1em 1em;
+}
+
+.flex-auto {
+    display: flex;
+    justify-content: space-between;
+}
+
+div.p-timepicker {
+    display: flex;
+}
+
+div.p-separator {
+    display: flex;
+    align-items: center;
+}
+
+div.p-datepicker-header {
+    display: flex;
+}
+
+.p-inputgroup {
+    width: 100%;
+}
