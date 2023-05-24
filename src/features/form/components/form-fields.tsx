@@ -3,6 +3,7 @@ import { Checkbox } from 'primereact/checkbox';
 import { InputText } from 'primereact/inputtext';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
+import { Card } from 'primereact/card';
 import './form-fields.css'
 
 export const FormFields = (url: any) => {
@@ -18,14 +19,15 @@ export const FormFields = (url: any) => {
     const [totalUnit, setTotalUnit] = useState('');
     const [distanceValue, setDistanceValue] = useState('');
     const [distanceUnit, setDistanceUnit] = useState('');
-
+    const [data, setData] = useState<any>()
     const [formData, setFormData] = useState({
+        id: 2000,
         version: '',
         entityType: '',
         startDate: '',
         endDate: '',
         count: '',
-        checked: false,
+        enabled: false,
         type: '',
         total: {
             totalValue: '',
@@ -36,15 +38,21 @@ export const FormFields = (url: any) => {
             distanceUnit: ''
         }
     })
-
+    
+    const [form, setForm] = useState({
+        logType: 'orderInfo',
+        message: {}
+    })
+    
     const saveData = () => {
         setFormData({
+            id: 2000,
             version: version,
             entityType: entityType,
             startDate: startDate,
             endDate: endDate,
             count: count,
-            checked: checked,
+            enabled: checked,
             type: type,
             total: {
                 totalValue: totalValue,
@@ -55,6 +63,11 @@ export const FormFields = (url: any) => {
                 distanceValue: distanceValue,
                 distanceUnit: distanceUnit
             }
+        })
+        
+        setForm({
+            logType: 'orderInfo',
+            message: formData
         })
     }
 
@@ -70,6 +83,10 @@ export const FormFields = (url: any) => {
         setTotalUnit('');
         setDistanceValue('');
         setDistanceUnit('');
+        setForm({
+            logType: 'orderInfo',
+            message: {}
+        })
     }
 
     const handleSubmit = (e: any) => {
@@ -77,19 +94,28 @@ export const FormFields = (url: any) => {
         console.log(formData)
         saveData();
         sendData();
-        clearData();
+        // clearData();
     }
-
+    
+    const show = async() => {
+        console.log(form)
+        const res = fetch(`http://localhost:3900/orders/calc/${formData.id}`).then(res => res.json()).then(data => {
+        console.log('data', data)    
+        setData(data)
+        })
+    }
+            
     const sendData = () => {
-        fetch(`${url}`, {
+        fetch(`http://localhost:3500/calculate`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(form)
         })
     }
-
+    console.log('formData', formData)
+    console.log('form', form)
 
     return (
 
@@ -99,7 +125,7 @@ export const FormFields = (url: any) => {
 
                 value={version}
                 onChange={(e) => setVersion(e.target.value)}
-                placeholder='Label'
+                placeholder='Version'
             />
             <InputText
 
@@ -113,7 +139,7 @@ export const FormFields = (url: any) => {
                     inputId="start_date"
                     placeholder='Start Date'
                     value={startDate}
-                    onChange={(e) => setStartDate(e.value)}
+                    onChange={(e:any) => setStartDate(e.value)}
                     showTime
                     hourFormat="24"
                 />
@@ -123,7 +149,7 @@ export const FormFields = (url: any) => {
                     inputId="end_date"
                     placeholder='End Date'
                     value={endDate}
-                    onChange={(e) => setEndDate(e.value)}
+                    onChange={(e:any) => setEndDate(e.value)}
                     showTime
                     hourFormat="24"
                 />
@@ -177,7 +203,7 @@ export const FormFields = (url: any) => {
                 <label htmlFor="enabled"> Enabled </label>
                 <Checkbox
                     checked={checked}
-                    onChange={(e) => setChecked(e.checked)}
+                    onChange={(e:any) => setChecked(e.checked)}
                 />
             </div>
 
@@ -185,6 +211,15 @@ export const FormFields = (url: any) => {
                 label="Submit"
                 onClick={handleSubmit}
             />
+            
+            <Card>
+                Nice
+                <Button 
+                    label="Show results"
+                    onClick={show}
+                />
+                <p>{data?.unit?.value ? data.unit.value : 'Order not found'}</p>
+            </Card>
 
         </div>
 

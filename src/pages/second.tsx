@@ -3,13 +3,13 @@ import { FormFields } from "../features/form/components/form-fields";
 
 export const Second = () => {
 
-    const KAFKA_URL = 'http://localhost:15672/api/queues/%2F/second-service';
+    const API_URL = 'http://localhost:3500';
 
     return (
         <>
             <h1>Second Service</h1>
             <FormFields
-                url={KAFKA_URL}
+                url={API_URL}
             />
         </>
     )
